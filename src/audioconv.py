@@ -50,3 +50,50 @@ def direct_play(file_name,
     stream.stop_stream()
     stream.close()
     p.terminate()
+
+def direct_record(file_name,
+                  time,
+                  chunk = 1024,
+                  sample_rate = 44100,
+                  format = pyaudio.paInt16,
+                  channel = 1):
+    """
+    Records the data coming from microphone and saves to the file specified.
+
+    Parameters
+    ----------
+    file_name : str
+        The name of the file to write data to
+    time : int
+        Recording time in seconds
+    chunk : int
+        The chunk size
+    sample_rate : int
+        The rate of signal sampling
+    format
+        The data format
+    channel : int (1 or 2)
+        1 (mono) or 2 (stereo)
+    """
+
+    p = pyaudio.PyAudio()
+
+    stream = p.open(format = format,
+                    channels = channel,
+                    rate = sample_rate,
+                    input = True,
+                    frames_per_buffer = chunk)
+
+    frames = []
+
+    for i in range(0, int(sample_rate / chunk * time)):
+        data = stream.read(chunk)
+        frames.append(data)
+
+    stream.stop_stream()
+    stream.close()
+    p.terminate()
+
+    data_file = open(file_name, 'wb', chunk)
+    data_file.write(b''.join(frames))
+    data_file.close()
