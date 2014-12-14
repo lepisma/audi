@@ -46,7 +46,7 @@ class TestModem(unittest.TestCase):
         wave = '\xff\xaa\xff\xaa\x00\xaaUU\xff\xff\xff\xff\x00\xaa\x00\x00'
         data = np.array([187, 88, 255, 8])
         outdata = custom.demodulate(wave)
-        self.assertEqual(data, outdata)
+        self.assertTrue(np.array_equal(data, outdata))
     
 if __name__ == "__main__":
     unittest.main()

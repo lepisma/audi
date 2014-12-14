@@ -71,7 +71,22 @@ def demodulate(wave):
         Data in numpy.uint8 array form
     """
 
-    pass
+    raw = np.frombuffer(wave, np.uint8)
+    raw = np.array(raw, dtype = np.float16)
+    max_data = np.max(raw) # Assuming it contains real '\xff'
+
+    # Leveling data
+
+    bins = np.linspace(0, max_data, 5)
+    raw = np.digitize(raw, bins) - 1
+    raw[raw == 4] = 3
+
+    # Converting to base 10
+    b4_conv_fact = [1, 4, 16, 64]
+    raw = raw.reshape(raw.size / 4, 4)
+    data = np.array(np.dot(raw, b4_conv_fact), dtype = np.uint8)
+    
+    return data
 
 def add_trails(wave):
     """
