@@ -35,7 +35,16 @@ def modulate(data):
         form to work with pyaudio
     """
 
-    pass
+    wave = ''
+    levels = ('\x00', '\x55', '\xaa', '\xff')
+    
+    for frame in data:
+        next_num = frame
+        for grp in range(4):
+            wave += levels[next_num % 4]
+            next_num /= 4
+
+    return wave
 
 def demodulate(wave):
     """
