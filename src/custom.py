@@ -91,9 +91,15 @@ def demodulate(wave):
 def add_trails(wave):
     """
     Adds start and stop pattern to the given wave
+    
+    Adding 'audi' on both sides
     """
     
-    pass
+    text = 'audi'
+    as_int = map(ord, text)
+    as_wave = modulate(as_int)
+
+    return as_wave + wave + as_wave
 
 def detect_start(data):
     """
