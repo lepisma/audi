@@ -26,7 +26,7 @@ class TestModem(unittest.TestCase):
         """
 
         wave = '\x00\x55\xaa\xff\x00\x00\x00\x00'
-        self.assertEqual(len(wave) / 4, len(custom.demodulate(wave)))
+        self.assertEqual(len(wave) / 4, len(custom.levels_to_data(custom.demodulate(wave))))
 
     def test_modulate(self):
         """
@@ -45,7 +45,7 @@ class TestModem(unittest.TestCase):
 
         wave = '\xff\xaa\xff\xaa\x00\xaaUU\xff\xff\xff\xff\x00\xaa\x00\x00'
         data = np.array([187, 88, 255, 8])
-        outdata = custom.demodulate(wave)
+        outdata = custom.levels_to_data(custom.demodulate(wave))
         self.assertTrue(np.array_equal(data, outdata))
     
 if __name__ == "__main__":

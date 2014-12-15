@@ -55,7 +55,6 @@ def demodulate(wave):
     - Scale the values (or don't, since the relative values are
     important)
     - Construct 2 bits per wave byte using the 4 levels
-    - Construct the array of unit8 numbers
 
     Doing this on chunks rather than whole will allow the program
     to stop the stream after getting the stop pattern.
@@ -67,25 +66,41 @@ def demodulate(wave):
 
     Returns
     -------
-    data : numpy.ndarray
-        Data in numpy.uint8 array form
+    levels : numpy.ndarray
+        Levels output from the wave
     """
 
-    raw = np.frombuffer(wave, np.uint8)
-    raw = np.array(raw, dtype = np.float16)
-    max_data = np.max(raw) # Assuming it contains real '\xff'
+    levels = np.frombuffer(wave, np.uint8)
+    levels = np.array(levels, dtype = np.float16)
+    max_data = np.max(levels) # Assuming it contains real '\xff'
 
     # Leveling data
 
     bins = np.linspace(0, max_data, 5)
-    raw = np.digitize(raw, bins) - 1
-    raw[raw == 4] = 3
-
-    # Converting to base 10
-    b4_conv_fact = [1, 4, 16, 64]
-    raw = raw.reshape(raw.size / 4, 4)
-    data = np.array(np.dot(raw, b4_conv_fact), dtype = np.uint8)
+    levels= np.digitize(levels, bins) - 1
+    levels[levels == 4] = 3 # Resolving edge issue
     
+    return levels
+
+def levels_to_data(levels):
+    """
+    Converts the levels from demodulation to data array
+
+    Parameters
+    ----------
+    levels : numpy.ndarray
+        Contains converted form of wave in 4 levels
+
+    Returns
+    -------
+    data : numpy.ndarray
+        The data array in uint8 form
+    """
+
+    b4_conv_fact = [1, 4, 16, 64]
+    levels = levels.reshape(levels.size / 4, 4)
+    data = np.array(np.dot(levels, b4_conv_fact), dtype = np.uint8)
+
     return data
 
 def add_trails(wave):
