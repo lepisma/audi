@@ -4,6 +4,8 @@ Helper module with functions for interacting with data on audio port
 
 import pyaudio
 import wave
+import custom
+import numpy as np
 
 def direct_play(file_name,
                 sample_rate = 44100,
@@ -51,6 +53,31 @@ def direct_play(file_name,
     stream.close()
     p.terminate()
 
+def modulated_play(file_name,
+                   sample_rate = 44100,
+                   chunk = 1024,
+                   channel = 1,
+                   width = 2):
+    """
+    Plays the modulated data
+    """
+
+    data = np.fromfile(file_name, dtype = np.uint8)
+    wave = custom.modulate(data)
+
+    p = pyaudio.PyAudio()
+
+    stream = p.open(format = p.get_format_from_width(width),
+                    channels = channel,
+                    rate = sample_rate,
+                    output = True)
+
+    stream.write(wave)
+
+    stream.stop_stream()
+    stream.close()
+    p.terminate()
+    
 def direct_record(file_name,
                   time,
                   chunk = 1024,
