@@ -1,5 +1,7 @@
 #Audi
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/lepisma/audi?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Audi uses audio signals to transfer data.
 Not meant for speed or anything, just an experiment.
 
